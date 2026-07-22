@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>김라온의 여름방학 RPG : 서울런 멘토링 퀘스트</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts for Retro Pixel Feel -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DungGeunMo&family=Jua&family=Gamja+Flower&display=swap" rel="stylesheet">
+
+    <style>
+        /* Custom Gaming Typography & Styling */
+        body {
+            font-family: 'Jua', 'DungGeunMo', sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .pixel-font {
+            font-family: 'DungGeunMo', monospace;
+        }
+
+        /* Pixel Border Styling */
+        .pixel-box {
+            border: 4px solid #3b82f6;
+            box-shadow: 4px 4px 0px #1e3a8a, inset -2px -2px 0px #1d4ed8;
+            background: rgba(30, 41, 59, 0.95);
+        }
+
+        .pixel-box-gold {
+            border: 4px solid #f59e0b;
+            box-shadow: 4px 4px 0px #78350f, inset -2px -2px 0px #b45309;
+            background: rgba(45, 26, 3, 0.9);
+        }
+
+        .pixel-box-green {
+            border: 4px solid #10b981;
+            box-shadow: 4px 4px 0px #064e3b, inset -2px -2px 0px #047857;
+            background: rgba(6, 78, 59, 0.9);
+        }
+
+        .pixel-btn {
+            position: relative;
+            transition: all 0.1s ease;
+            box-shadow: 0px 5px 0px #1d4ed8;
+        }
+
+        .pixel-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0px 1px 0px #1d4ed8;
+        }
+
+        .pixel-btn-gold {
+            background-color: #f59e0b;
+            color: #1e1b4b;
+            border: 3px solid #fef08a;
+            box-shadow: 0px 5px 0px #b45309;
+        }
+
+        .pixel-btn-gold:active {
+            transform: translateY(4px);
+            box-shadow: 0px 1px 0px #b45309;
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1e293b;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #3b82f6;
+            border-radius: 4px;
+        }
+
+        /* Sparkle & Animations */
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.85; transform: scale(1.02); }
+        }
+
+        .glow-effect {
+            animation: pulse-glow 2s infinite ease-in-out;
+        }
+
+        @keyframes levelUp {
+            0% { transform: scale(0.5) rotate(-10deg); opacity: 0; }
+            50% { transform: scale(1.1) rotate(5deg); opacity: 1; }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+
+        .pop-in {
+            animation: levelUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        /* Custom Checkbox */
+        .quest-checkbox {
+            appearance: none;
+            width: 28px;
+            height: 28px;
+            border: 3px solid #3b82f6;
+            background-color: #0f172a;
+            border-radius: 6px;
+            cursor: pointer;
+            display: grid;
+            place-content: center;
+        }
+
+        .quest-checkbox::before {
+            content: "✔";
+            font-size: 18px;
+            color: #10b981;
+            transform: scale(0);
+            transition: 120ms transform ease-in-out;
+        }
+
+        .quest-checkbox:checked::before {
+            transform: scale(1);
+        }
+
+        .quest-checkbox:checked {
+            border-color: #10b981;
+            background-color: #064e3b;
+        }
+    </style>
+</head>
+<body class="min-h-screen pb-20 flex flex-col items-center justify-start text-lg">
+
+    <div id="app" class="w-full max-w-md mx-auto px-3 py-3 flex flex-col gap-4">
+
+        <!-- RPG Status Header -->
+        <header class="pixel-box p-4 rounded-xl relative overflow-hidden bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 border-indigo-500">
+            <div class="flex items-center gap-3">
+                <div class="relative">
+                    <div class="w-16 h-16 rounded-2xl bg-indigo-600 border-2 border-yellow-300 flex items-center justify-center text-3xl shadow-lg relative overflow-hidden">
+                        🎮
+                        <span id="badge-count" class="absolute -bottom-1 -right-1 bg-yellow-500 text-slate-950 text-xs px-1.5 py-0.5 rounded-full font-bold">LV.1</span>
+                    </div>
+                </div>
+
+                <div class="flex-1">
+                    <div class="flex justify-between items-baseline">
+                        <span id="player-title" class="text-xs text-yellow-400 pixel-font tracking-wider">서울런 용사 멘티</span>
+                        <span id="level-text" class="text-xs text-indigo-300 font-bold">EXP 0 / 100</span>
+                    </div>
+
+                    <div class="flex items-center gap-2 mt-0.5">
+                        <h1 id="header-name" class="text-2xl font-black tracking-wide text-white">김라온</h1>
+                        <button onclick="openProfileModal()" class="text-xs bg-slate-800 hover:bg-slate-700 text-yellow-300 px-2 py-0.5 rounded border border-yellow-500/50">
+                            <i class="fa-solid fa-pen-to-square"></i> 정보수정
+                        </button>
+                    </div>
+
+                    <p id="header-school" class="text-sm text-slate-300">서울중학교 2학년 3반</p>
+
+                    <!-- EXP Bar -->
+                    <div class="w-full bg-slate-800 h-3 rounded-full mt-2 border border-slate-700 overflow-hidden relative">
+                        <div id="exp-bar" class="bg-gradient-to-r from-yellow-500 to-amber-300 h-full w-0 transition-all duration-500"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- D-Day Banner -->
+            <div class="mt-3 pt-2 border-t border-slate-800 flex justify-between items-center text-xs text-slate-300">
+                <span>🗓️ 방학 기간: <strong class="text-cyan-300">7.22(수) ~ 8.17(월)</strong></span>
+                <span id="d-day-badge" class="bg-indigo-900 text-indigo-200 px-2 py-0.5 rounded-md font-bold">27일간의 대모험</span>
+            </div>
+        </header>
+
+        <!-- Navigation Buttons -->
+        <nav class="grid grid-cols-3 gap-2 text-center text-base">
+            <button onclick="switchTab('daily')" id="tab-daily" class="py-2.5 px-2 rounded-xl border-2 font-bold transition-all bg-indigo-600 border-indigo-400 text-white shadow-md">
+                ⏰ 하루 일과
+            </button>
+            <button onclick="switchTab('calendar')" id="tab-calendar" class="py-2.5 px-2 rounded-xl border-2 font-bold transition-all bg-slate-800 border-slate-700 text-slate-400">
+                📅 방학 달력
+            </button>
+            <button onclick="switchTab('report')" id="tab-report" class="py-2.5 px-2 rounded-xl border-2 font-bold transition-all bg-slate-800 border-slate-700 text-slate-400">
+                📜 멘토 전송
+            </button>
+        </nav>
+
+        <!-- TAB 1: DAILY ROUTINE (하루 일과표) -->
+        <section id="sec-daily" class="flex flex-col gap-3">
+            <div class="pixel-box-green p-4 rounded-xl">
+                <div class="flex justify-between items-center mb-2">
+                    <h2 class="text-xl font-bold text-emerald-300 flex items-center gap-2">
+                        <span>⚡</span> 하루 일과 퀘스트 (기본 루틴)
+                    </h2>
+                    <button onclick="resetDailyRoutine()" class="text-xs text-slate-300 underline hover:text-white">
+                        초기화
+                    </button>
+                </div>
+                <p class="text-sm text-emerald-100 mb-3">매일매일 실천할 골든 루틴을 체크해봐요! 완료시 경험치 획득!</p>
+
+                <!-- Routine List Container -->
+                <div id="routine-list" class="flex flex-col gap-2.5">
+                    <!-- Dynamic rendering -->
+                </div>
+
+                <button onclick="addNewRoutine()" class="w-full mt-3 py-2 bg-emerald-800 hover:bg-emerald-700 border border-emerald-400 text-emerald-100 rounded-lg font-bold text-sm flex items-center justify-center gap-1">
+                    <i class="fa-solid fa-plus"></i> 일과 항목 추가하기
+                </button>
+            </div>
+        </section>
+
+        <!-- TAB 2: VACATION CALENDAR (7/22 ~ 8/17 주간/일자별 일정) -->
+        <section id="sec-calendar" class="hidden flex flex-col gap-3">
+            <div class="pixel-box p-4 rounded-xl">
+                <div class="flex justify-between items-center mb-2">
+                    <h2 class="text-xl font-bold text-yellow-300 flex items-center gap-2">
+                        <span>🗓️</span> 방학 일정 맵 (7/22 ~ 8/17)
+                    </h2>
+                    <span class="text-xs bg-slate-800 text-yellow-400 px-2 py-1 rounded border border-yellow-600" id="selected-date-display">
+                        오늘 날짜
+                    </span>
+                </div>
+                <p class="text-sm text-slate-300 mb-3">날짜를 클릭해 특별한 방학 퀘스트 목표를 설정하고 달성해보세요!</p>
+
+                <!-- Mini Calendar Grid -->
+                <div class="bg-slate-900 p-2.5 rounded-lg border border-slate-700 mb-4">
+                    <div class="grid grid-cols-7 gap-1 text-center text-xs font-bold text-slate-400 mb-1">
+                        <span class="text-red-400">일</span>
+                        <span>월</span>
+                        <span>화</span>
+                        <span>수</span>
+                        <span>목</span>
+                        <span>금</span>
+                        <span class="text-blue-400">토</span>
+                    </div>
+                    <div id="calendar-grid" class="grid grid-cols-7 gap-1 text-center text-sm">
+                        <!-- Dynamic Calendar cells -->
+                    </div>
+                </div>
+
+                <!-- Selected Day Tasks Card -->
+                <div class="bg-slate-800/90 border-2 border-indigo-500 p-3 rounded-xl">
+                    <div class="flex justify-between items-center mb-2 pb-2 border-b border-slate-700">
+                        <h3 id="day-detail-title" class="font-bold text-indigo-300 text-lg">7월 22일(수) 퀘스트</h3>
+                        <span id="day-completion-tag" class="text-xs bg-amber-900 text-amber-200 px-2 py-0.5 rounded font-bold">진행중</span>
+                    </div>
+
+                    <!-- Daily Mentoring / Study Specific Tasks -->
+                    <div id="day-task-list" class="flex flex-col gap-2 my-2">
+                        <!-- Dynamic task elements for selected day -->
+                    </div>
+
+                    <!-- Add task input -->
+                    <div class="flex gap-2 mt-3">
+                        <input type="text" id="new-day-task-input" placeholder="새로운 특별 계획 입력 (예: 서울런 2강 듣기)" 
+                            class="flex-1 bg-slate-900 border border-slate-600 rounded-lg px-3 py-1.5 text-sm text-white focus:outline-none focus:border-indigo-400">
+                        <button onclick="addDayTask()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-3 py-1.5 rounded-lg text-sm">
+                            추가
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 3: MENTOR REPORT & SHARE (멘토 전송 및 요약) -->
+        <section id="sec-report" class="hidden flex flex-col gap-3">
+            <div class="pixel-box-gold p-4 rounded-xl text-yellow-100">
+                <div class="flex justify-between items-center mb-2">
+                    <h2 class="text-xl font-bold text-yellow-300 flex items-center gap-2">
+                        <span>📜</span> 멘토 제출용 방학 일지
+                    </h2>
+                    <span class="text-xs bg-yellow-950 text-yellow-300 px-2 py-1 rounded border border-yellow-600">
+                        서울런 멘토링
+                    </span>
+                </div>
+                <p class="text-sm text-amber-200 mb-4">멘토 선생님께 나의 방학 계획과 현재 달성 상황을 공유하세요!</p>
+
+                <!-- Report Card Summary -->
+                <div id="report-summary-card" class="bg-slate-950 border-2 border-yellow-500/60 p-4 rounded-xl text-slate-200 space-y-3">
+                    <div class="border-b border-slate-800 pb-2 text-center">
+                        <span class="text-xs text-yellow-400 font-bold tracking-widest">[ 서울런 멘토링 방학 퀘스트 보고서 ]</span>
+                        <h3 class="text-2xl font-black text-white mt-1" id="report-name">김라온 학생</h3>
+                        <p class="text-xs text-slate-400" id="report-school-info">서울중학교 2학년 3반</p>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2 text-center text-sm py-1">
+                        <div class="bg-slate-900 p-2 rounded-lg border border-slate-800">
+                            <span class="text-slate-400 block text-xs">총 방학 미션 완료</span>
+                            <span id="report-completed-count" class="text-xl font-bold text-emerald-400">0개</span>
+                        </div>
+                        <div class="bg-slate-900 p-2 rounded-lg border border-slate-800">
+                            <span class="text-slate-400 block text-xs">멘티 레벨</span>
+                            <span id="report-level" class="text-xl font-bold text-yellow-400">LV.1</span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h4 class="text-xs font-bold text-yellow-300 mb-1">⭐ 핵심 하루 일과 (루틴):</h4>
+                        <ul id="report-routine-summary" class="text-xs space-y-1 bg-slate-900 p-2.5 rounded border border-slate-800 text-slate-300">
+                            <!-- Summary dynamic -->
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h4 class="text-xs font-bold text-indigo-300 mb-1">📌 주요 일정 미리보기:</h4>
+                        <div id="report-upcoming-summary" class="text-xs bg-slate-900 p-2.5 rounded border border-slate-800 text-slate-300 max-h-36 overflow-y-auto space-y-1">
+                            <!-- Dynamic preview -->
+                        </div>
+                    </div>
+
+                    <div class="text-center pt-2">
+                        <p class="text-xs text-slate-400 italic">"선생님! 매일 퀘스트를 완료하고 서울런 멘토링도 열심히 하고 있어요!"</p>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex flex-col gap-2 mt-4">
+                    <button onclick="copyMentorReport()" class="pixel-btn-gold py-3 px-4 rounded-xl font-black text-center text-base flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-copy text-lg"></i> 카카오톡/문자용 요약 텍스트 복사하기
+                    </button>
+                    <p id="copy-toast" class="text-xs text-center text-emerald-400 font-bold hidden">
+                        ✨ 멘토 선생님께 보낼 메시지가 복사되었습니다!
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Mentor Praise Box (Always accessible below) -->
+        <div id="praise-box" class="pixel-box-gold p-3.5 rounded-xl flex items-center gap-3">
+            <div class="text-3xl animate-bounce">🧙‍♂️</div>
+            <div class="flex-1">
+                <span class="text-xs font-bold text-yellow-400 block">멘토 선생님의 한마디 칭찬!</span>
+                <p id="praise-text" class="text-sm font-bold text-white leading-snug">
+                    "라온아! 방학 계획을 세우고 실천하는 모습이 정말 멋져! 오늘도 파이팅!"
+                </p>
+            </div>
+            <button onclick="getRandomPraise()" class="text-xs bg-yellow-500 hover:bg-yellow-400 text-slate-950 font-bold px-2 py-1 rounded">
+                <i class="fa-solid fa-rotate"></i>
+            </button>
+        </div>
+
+    </div>
+
+    <!-- Profile Edit Modal -->
+    <div id="modal-profile" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="pixel-box p-5 rounded-2xl w-full max-w-sm bg-slate-900 border-2 border-indigo-400">
+            <h2 class="text-xl font-bold text-yellow-300 mb-4 flex items-center gap-2">
+                <span>👤</span> 멘티 프로필 수정
+            </h2>
+
+            <div class="space-y-3 text-sm">
+                <div>
+                    <label class="block text-xs text-slate-300 mb-1">이름</label>
+                    <input type="text" id="input-name" class="w-full bg-slate-800 border border-slate-600 rounded-lg p-2 text-white font-bold">
+                </div>
+                <div>
+                    <label class="block text-xs text-slate-300 mb-1">중학교 이름</label>
+                    <input type="text" id="input-school" class="w-full bg-slate-800 border border-slate-600 rounded-lg p-2 text-white">
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="block text-xs text-slate-300 mb-1">학년</label>
+                        <input type="text" id="input-grade" class="w-full bg-slate-800 border border-slate-600 rounded-lg p-2 text-white">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-300 mb-1">반</label>
+                        <input type="text" id="input-class" class="w-full bg-slate-800 border border-slate-600 rounded-lg p-2 text-white">
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-end gap-2 mt-5">
+                <button onclick="closeProfileModal()" class="px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg text-xs font-bold">취소</button>
+                <button onclick="saveProfile()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-xs font-bold">저장하기</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Celebration / Level Up Popup Modal -->
+    <div id="modal-praise" class="fixed inset-0 bg-black/85 z-50 hidden flex items-center justify-center p-4">
+        <div class="pixel-box-gold p-6 rounded-2xl w-full max-w-sm text-center pop-in relative bg-slate-900 border-4 border-yellow-400">
+            <div class="text-6xl mb-2">🎉🏆✨</div>
+            <h2 id="praise-modal-title" class="text-2xl font-black text-yellow-300">퀘스트 달성 완료!</h2>
+            <p id="praise-modal-sub" class="text-sm text-amber-200 mt-1 font-bold">+20 EXP 획득!</p>
+
+            <div class="bg-slate-950 p-4 rounded-xl border border-yellow-600/50 my-4">
+                <p id="praise-modal-message" class="text-base font-bold text-white leading-relaxed">
+                    "대단해 라온아! 오늘 약속을 완벽하게 지켰구나! 멘토 선생님도 정말 뿌듯해!"
+                </p>
+            </div>
+
+            <button onclick="closePraiseModal()" class="pixel-btn-gold w-full py-3 rounded-xl font-bold text-slate-950">
+                멋져요! 계속 도전하기 💪
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Default Mentee State
+        let menteeData = {
+            name: "김라온",
+            school: "서울중학교",
+            grade: "2",
+            classNum: "3",
+            exp: 40,
+            level: 1,
+            // Daily recurring routine tasks
+            routines: [
+                { id: 1, time: "08:00", task: "아침 기상 & 기지개 켜기 ☀️", done: true },
+                { id: 2, time: "10:00", task: "서울런 온라인 강의 1시간 수강 📚", done: true },
+                { id: 3, time: "14:00", task: "서울런 멘토링 참여 및 과제 점검 👨‍🏫", done: false },
+                { id: 4, time: "16:00", task: "여름방학 독서 30분 또는 운동 🏃‍♂️", done: false },
+                { id: 5, time: "22:00", task: "오늘 하루 방학 일기 & 퀘스트 정리 📝", done: false }
+            ],
+            // Specific Date Tasks (July 22 to August 17)
+            dateTasks: {}
+        };
+
+        // Date range configuration: 2026-07-22 to 2026-08-17
+        const startDate = new Date(2026, 6, 22); // Month is 0-indexed (6 = July)
+        const endDate = new Date(2026, 7, 17);   // 7 = August
+
+        let selectedDateStr = "2026-07-22";
+
+        // Praise message pool from mentor
+        const mentorPraises = [
+            "🔥 대단해요 라온 학생! 오늘 퀘스트를 완벽하게 클리어했어요!",
+            "⭐ 멘토 선생님도 깜짝 놀랄 집중력! 스스로 해내는 모습이 아름다워요.",
+            "🏆 차곡차곡 쌓이는 공부 습관! 최고의 여름방학을 만들어가고 있네요.",
+            "🌱 성장의 경험치가 무럭무럭 쌓였습니다! 매일 성장하는 라온이 최고요!",
+            "👏 역시 약속을 잘 지키는 라온이! 오늘도 정말 고생 많았어요.",
+            "💡 오늘 배운 서울런 내용도 차근차근 잘 복습해냈군요! 최고!",
+            "🚀 한 발짝 더 목표에 가까워졌어요. 남은 방학도 함께 파이팅해요!"
+        ];
+
+        // Sound Effects generator using Web Audio API
+        function playSound(type) {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+
+                if (type === 'check') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(523.25, ctx.currentTime); // C5
+                    osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.15); // A5
+                    gain.gain.setValueAtTime(0.2, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.15);
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.15);
+                } else if (type === 'levelUp') {
+                    const now = ctx.currentTime;
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(440, now);
+                    osc.frequency.setValueAtTime(554.37, now + 0.1);
+                    osc.frequency.setValueAtTime(659.25, now + 0.2);
+                    osc.frequency.setValueAtTime(880, now + 0.3);
+                    gain.gain.setValueAtTime(0.3, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
+                    osc.start();
+                    osc.stop(now + 0.5);
+                }
+            } catch (e) {
+                // Audio Context fallback silently
+            }
+        }
+
+        window.onload = function() {
+            loadSavedData();
+            initDateTasksDefault();
+            renderHeader();
+            renderRoutines();
+            renderCalendar();
+            renderSelectedDayTasks();
+            renderMentorReport();
+            getRandomPraise();
+        };
+
+        function saveLocal() {
+            localStorage.setItem('seoul_learn_mentee_raon', JSON.stringify(menteeData));
+        }
+
+        function loadSavedData() {
+            const saved = localStorage.getItem('seoul_learn_mentee_raon');
+            if (saved) {
+                try {
+                    menteeData = JSON.parse(saved);
+                } catch(e) {}
+            }
+        }
+
+        // Initialize default sample schedule for the 27 days if empty
+        function initDateTasksDefault() {
+            let cur = new Date(startDate);
+            while (cur <= endDate) {
+                const dStr = formatDateKey(cur);
+                if (!menteeData.dateTasks[dStr]) {
+                    // Default tasks based on day of week or special days
+                    const dayNum = cur.getDay(); // 0 is Sun
+                    let tasks = [
+                        { id: Date.now() + Math.random(), task: "서울런 진도 체크 및 인강 1강 수강", done: false },
+                        { id: Date.now() + Math.random(), task: "멘토링 질문거리 1개 작성하기", done: false }
+                    ];
+
+                    if (dayNum === 3 || dayNum === 5) { // Wed or Fri
+                        tasks.unshift({ id: Date.now() + Math.random(), task: "👨‍🏫 서울런 1:1 멘토링 데이 (줌/전화 접속)", done: false });
+                    }
+                    if (dayNum === 6 || dayNum === 0) { // Weekend
+                        tasks.push({ id: Date.now() + Math.random(), task: "🎨 주말 취미 활동 & 방학 충전 타임", done: false });
+                    }
+
+                    menteeData.dateTasks[dStr] = tasks;
+                }
+                cur.setDate(cur.getDate() + 1);
+            }
+        }
+
+        function formatDateKey(dateObj) {
+            const y = dateObj.getFullYear();
+            const m = String(dateObj.getMonth() + 1).padStart(2, '0');
+            const d = String(dateObj.getDate()).padStart(2, '0');
+            return `${y}-${m}-${d}`;
+        }
+
+        function switchTab(tabName) {
+            ['daily', 'calendar', 'report'].forEach(t => {
+                const sec = document.getElementById(`sec-${t}`);
+                const tabBtn = document.getElementById(`tab-${t}`);
+                if (t === tabName) {
+                    sec.classList.remove('hidden');
+                    tabBtn.className = "py-2.5 px-2 rounded-xl border-2 font-bold transition-all bg-indigo-600 border-indigo-400 text-white shadow-md";
+                } else {
+                    sec.classList.add('hidden');
+                    tabBtn.className = "py-2.5 px-2 rounded-xl border-2 font-bold transition-all bg-slate-800 border-slate-700 text-slate-400";
+                }
+            });
+
+            if (tabName === 'report') {
+                renderMentorReport();
+            }
+        }
+
+        function renderHeader() {
+            document.getElementById('header-name').innerText = menteeData.name;
+            document.getElementById('header-school').innerText = `${menteeData.school} ${menteeData.grade}학년 ${menteeData.classNum}반`;
+
+            // Calculate Level & EXP
+            const expForNext = menteeData.level * 100;
+            const progress = Math.min(100, Math.floor((menteeData.exp / expForNext) * 100));
+
+            document.getElementById('level-text').innerText = `EXP ${menteeData.exp} / ${expForNext}`;
+            document.getElementById('exp-bar').style.width = `${progress}%`;
+            document.getElementById('badge-count').innerText = `LV.${menteeData.level}`;
+
+            // Titles depending on level
+            const titles = ["초보 용사 멘티", "열공 모드 멘티", "서울런 에이스 멘티", "방학 퀘스트 마스터"];
+            const titleIdx = Math.min(titles.length - 1, menteeData.level - 1);
+            document.getElementById('player-title').innerText = titles[titleIdx];
+        }
+
+        function addExp(amount) {
+            menteeData.exp += amount;
+            const expForNext = menteeData.level * 100;
+            if (menteeData.exp >= expForNext) {
+                menteeData.exp -= expForNext;
+                menteeData.level += 1;
+                playSound('levelUp');
+                showPraiseModal("🎉 레벨 업!!", `LV.${menteeData.level}로 등급 상승! 멘토 선생님도 깜짝 놀란 집중력!`);
+            } else {
+                playSound('check');
+            }
+            saveLocal();
+            renderHeader();
+        }
+
+        function renderRoutines() {
+            const container = document.getElementById('routine-list');
+            container.innerHTML = '';
+
+            menteeData.routines.forEach((r, idx) => {
+                const card = document.createElement('div');
+                card.className = `flex items-center justify-between p-3 rounded-lg border-2 transition-all ${
+                    r.done ? 'bg-emerald-950/60 border-emerald-500/80 text-emerald-200' : 'bg-slate-900 border-slate-700 text-slate-200'
+                }`;
+
+                card.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <input type="checkbox" class="quest-checkbox" ${r.done ? 'checked' : ''} onchange="toggleRoutine(${r.id})">
+                        <div>
+                            <span class="text-xs text-emerald-400 font-bold block">${r.time}</span>
+                            <span class="text-base font-bold ${r.done ? 'line-through opacity-75' : ''}">${r.task}</span>
+                        </div>
+                    </div>
+                    <button onclick="deleteRoutine(${r.id})" class="text-xs text-slate-500 hover:text-red-400 px-2 py-1">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function toggleRoutine(id) {
+            const item = menteeData.routines.find(r => r.id === id);
+            if (item) {
+                item.done = !item.done;
+                if (item.done) {
+                    addExp(15);
+                    triggerRandomPraiseModal();
+                } else {
+                    saveLocal();
+                }
+                renderRoutines();
+            }
+        }
+
+        function addNewRoutine() {
+            const time = prompt("루틴 시간을 입력하세요 (예: 15:00):", "15:00");
+            if (!time) return;
+            const task = prompt("하루 일과 내용을 입력하세요:", "서울런 복습 및 퀴즈 풀기");
+            if (!task) return;
+
+            menteeData.routines.push({
+                id: Date.now(),
+                time: time,
+                task: task,
+                done: false
+            });
+            saveLocal();
+            renderRoutines();
+        }
+
+        function deleteRoutine(id) {
+            menteeData.routines = menteeData.routines.filter(r => r.id !== id);
+            saveLocal();
+            renderRoutines();
+        }
+
+        function resetDailyRoutine() {
+            if (confirm("오늘의 하루 일과 체크를 모두 초기화할까요?")) {
+                menteeData.routines.forEach(r => r.done = false);
+                saveLocal();
+                renderRoutines();
+            }
+        }
+
+        function renderCalendar() {
+            const grid = document.getElementById('calendar-grid');
+            grid.innerHTML = '';
+
+            let cur = new Date(startDate);
+            
+            // Add padding for starting day of week (July 22, 2026 is Wednesday = 3)
+            const startDay = startDate.getDay();
+            for (let i = 0; i < startDay; i++) {
+                const emptyCell = document.createElement('div');
+                emptyCell.className = 'p-2 rounded text-slate-700 text-xs';
+                emptyCell.innerText = '-';
+                grid.appendChild(emptyCell);
+            }
+
+            while (cur <= endDate) {
+                const dKey = formatDateKey(cur);
+                const dayNum = cur.getDate();
+                const tasks = menteeData.dateTasks[dKey] || [];
+                const allDone = tasks.length > 0 && tasks.every(t => t.done);
+                const isSelected = dKey === selectedDateStr;
+
+                const cell = document.createElement('button');
+                cell.onclick = () => selectDate(dKey);
+
+                let bgClass = "bg-slate-800 text-slate-300 hover:bg-slate-700";
+                if (isSelected) {
+                    bgClass = "bg-yellow-500 text-slate-950 font-black ring-2 ring-yellow-300";
+                } else if (allDone) {
+                    bgClass = "bg-emerald-900 border border-emerald-500 text-emerald-300 font-bold";
+                }
+
+                cell.className = `p-2 rounded-lg flex flex-col items-center justify-center transition-all ${bgClass}`;
+                cell.innerHTML = `
+                    <span class="text-xs font-bold">${dayNum}</span>
+                    <span class="text-[10px] mt-0.5">${allDone ? '✔' : tasks.length + '개'}</span>
+                `;
+
+                grid.appendChild(cell);
+                cur.setDate(cur.getDate() + 1);
+            }
+
+            // Display current selected date name
+            const [y, m, d] = selectedDateStr.split('-');
+            const dateObj = new Date(y, parseInt(m)-1, d);
+            const daysKor = ['일', '월', '화', '수', '목', '금', '토'];
+            const dayName = daysKor[dateObj.getDay()];
+
+            document.getElementById('selected-date-display').innerText = `${parseInt(m)}월 ${parseInt(d)}일(${dayName})`;
+            document.getElementById('day-detail-title').innerText = `${parseInt(m)}월 ${parseInt(d)}일(${dayName}) 퀘스트`;
+        }
+
+        function selectDate(dKey) {
+            selectedDateStr = dKey;
+            renderCalendar();
+            renderSelectedDayTasks();
+        }
+
+        function renderSelectedDayTasks() {
+            const container = document.getElementById('day-task-list');
+            container.innerHTML = '';
+
+            const tasks = menteeData.dateTasks[selectedDateStr] || [];
+
+            if (tasks.length === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-400 py-3 text-center">등록된 계획이 없습니다. 새로운 퀘스트를 추가해보세요!</p>`;
+            } else {
+                const allDone = tasks.every(t => t.done);
+                const tag = document.getElementById('day-completion-tag');
+                if (allDone) {
+                    tag.className = "text-xs bg-emerald-900 text-emerald-200 px-2 py-0.5 rounded font-bold";
+                    tag.innerText = "⭐ 클리어 완료!";
+                } else {
+                    tag.className = "text-xs bg-amber-900 text-amber-200 px-2 py-0.5 rounded font-bold";
+                    tag.innerText = "진행중";
+                }
+
+                tasks.forEach(t => {
+                    const item = document.createElement('div');
+                    item.className = `flex items-center justify-between p-2.5 rounded-lg border text-sm ${
+                        t.done ? 'bg-emerald-950/40 border-emerald-600/60 text-emerald-300' : 'bg-slate-900 border-slate-700 text-white'
+                    }`;
+
+                    item.innerHTML = `
+                        <div class="flex items-center gap-2.5 flex-1 pr-2">
+                            <input type="checkbox" class="quest-checkbox" ${t.done ? 'checked' : ''} onchange="toggleDayTask('${t.id}')">
+                            <span class="${t.done ? 'line-through opacity-75' : ''}">${t.task}</span>
+                        </div>
+                        <button onclick="deleteDayTask('${t.id}')" class="text-xs text-slate-500 hover:text-red-400">
+                            <i class="fa-solid fa-xmark text-sm"></i>
+                        </button>
+                    `;
+                    container.appendChild(item);
+                });
+            }
+        }
+
+        function toggleDayTask(taskId) {
+            const tasks = menteeData.dateTasks[selectedDateStr] || [];
+            const t = tasks.find(x => String(x.id) === String(taskId));
+            if (t) {
+                t.done = !t.done;
+                if (t.done) {
+                    addExp(20);
+                    triggerRandomPraiseModal();
+                } else {
+                    saveLocal();
+                }
+                renderCalendar();
+                renderSelectedDayTasks();
+            }
+        }
+
+        function addDayTask() {
+            const input = document.getElementById('new-day-task-input');
+            const val = input.value.trim();
+            if (!val) return;
+
+            if (!menteeData.dateTasks[selectedDateStr]) {
+                menteeData.dateTasks[selectedDateStr] = [];
+            }
+
+            menteeData.dateTasks[selectedDateStr].push({
+                id: Date.now(),
+                task: val,
+                done: false
+            });
+
+            input.value = '';
+            saveLocal();
+            renderCalendar();
+            renderSelectedDayTasks();
+        }
+
+        function deleteDayTask(taskId) {
+            if (!menteeData.dateTasks[selectedDateStr]) return;
+            menteeData.dateTasks[selectedDateStr] = menteeData.dateTasks[selectedDateStr].filter(x => String(x.id) !== String(taskId));
+            saveLocal();
+            renderCalendar();
+            renderSelectedDayTasks();
+        }
+
+        function renderMentorReport() {
+            document.getElementById('report-name').innerText = `${menteeData.name} 멘티`;
+            document.getElementById('report-school-info').innerText = `${menteeData.school} ${menteeData.grade}학년 ${menteeData.classNum}반`;
+            document.getElementById('report-level').innerText = `LV.${menteeData.level}`;
+
+            // Count completed tasks total
+            let completed = menteeData.routines.filter(r => r.done).length;
+            Object.values(menteeData.dateTasks).forEach(arr => {
+                completed += arr.filter(t => t.done).length;
+            });
+            document.getElementById('report-completed-count').innerText = `${completed}개 완료`;
+
+            // Routine summary
+            const routineSum = document.getElementById('report-routine-summary');
+            routineSum.innerHTML = menteeData.routines.map(r => `
+                <li class="flex justify-between">
+                    <span>• ${r.time} ${r.task}</span>
+                    <span class="${r.done ? 'text-emerald-400' : 'text-slate-500'} font-bold">${r.done ? '✓ 완료' : '미완료'}</span>
+                </li>
+            `).join('');
+
+            // Upcoming schedule summary
+            const upcomingSum = document.getElementById('report-upcoming-summary');
+            let upcomingHTML = '';
+            
+            // Show next 5 days tasks
+            let count = 0;
+            let cur = new Date(startDate);
+            while (cur <= endDate && count < 5) {
+                const dKey = formatDateKey(cur);
+                const tasks = menteeData.dateTasks[dKey] || [];
+                if (tasks.length > 0) {
+                    const [, m, d] = dKey.split('-');
+                    upcomingHTML += `<div class="mb-1.5"><strong class="text-yellow-400">${parseInt(m)}월 ${parseInt(d)}일:</strong>`;
+                    tasks.forEach(t => {
+                        upcomingHTML += `<div class="pl-2 flex justify-between text-[11px]">
+                            <span>- ${t.task}</span>
+                            <span class="${t.done ? 'text-emerald-400' : 'text-amber-400'}">${t.done ? '완료' : '진행중'}</span>
+                        </div>`;
+                    });
+                    upcomingHTML += `</div>`;
+                    count++;
+                }
+                cur.setDate(cur.getDate() + 1);
+            }
+            upcomingSum.innerHTML = upcomingHTML || '<p class="text-slate-500">일정이 없습니다.</p>';
+        }
+
+        function copyMentorReport() {
+            let completed = menteeData.routines.filter(r => r.done).length;
+            Object.values(menteeData.dateTasks).forEach(arr => {
+                completed += arr.filter(t => t.done).length;
+            });
+
+            let text = `[ 서울런 멘토링 방학 퀘스트 보고서 ]\n`;
+            text += `멘티: ${menteeData.name} (${menteeData.school} ${menteeData.grade}학년 ${menteeData.classNum}반)\n`;
+            text += `현재 레벨: LV.${menteeData.level} / 총 달성 퀘스트: ${completed}개\n\n`;
+            text += `⏰ [매일 하루 일과 루틴]\n`;
+            menteeData.routines.forEach(r => {
+                text += `${r.done ? '✅' : '⬜'} [${r.time}] ${r.task}\n`;
+            });
+
+            text += `\n📅 [주요 일정 및 멘토링 목표]\n`;
+            let cur = new Date(startDate);
+            let addedCount = 0;
+            while (cur <= endDate && addedCount < 5) {
+                const dKey = formatDateKey(cur);
+                const tasks = menteeData.dateTasks[dKey] || [];
+                if (tasks.length > 0) {
+                    const [, m, d] = dKey.split('-');
+                    text += `• ${parseInt(m)}/${parseInt(d)}: ${tasks.map(t => (t.done ? '✅' : '⬜') + t.task).join(', ')}\n`;
+                    addedCount++;
+                }
+                cur.setDate(cur.getDate() + 1);
+            }
+
+            text += `\n선생님! 매일 퀘스트를 실천하며 보람찬 여름방학 보낼게요! 파이팅! 🔥`;
+
+            // Copy via dummy textarea for iFrame compatibility
+            const tempInput = document.createElement("textarea");
+            tempInput.value = text;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand("copy");
+            document.body.removeChild(tempInput);
+
+            const toast = document.getElementById('copy-toast');
+            toast.classList.remove('hidden');
+            setTimeout(() => toast.classList.add('hidden'), 3000);
+        }
+
+        function getRandomPraise() {
+            const idx = Math.floor(Math.random() * mentorPraises.length);
+            document.getElementById('praise-text').innerText = mentorPraises[idx];
+        }
+
+        function triggerRandomPraiseModal() {
+            const idx = Math.floor(Math.random() * mentorPraises.length);
+            showPraiseModal("⭐ 퀘스트 완수 칭찬!", mentorPraises[idx]);
+        }
+
+        function showPraiseModal(title, msg) {
+            document.getElementById('praise-modal-title').innerText = title;
+            document.getElementById('praise-modal-message').innerText = msg;
+            document.getElementById('modal-praise').classList.remove('hidden');
+        }
+
+        function closePraiseModal() {
+            document.getElementById('modal-praise').classList.add('hidden');
+        }
+
+        function openProfileModal() {
+            document.getElementById('input-name').value = menteeData.name;
+            document.getElementById('input-school').value = menteeData.school;
+            document.getElementById('input-grade').value = menteeData.grade;
+            document.getElementById('input-class').value = menteeData.classNum;
+            document.getElementById('modal-profile').classList.remove('hidden');
+        }
+
+        function closeProfileModal() {
+            document.getElementById('modal-profile').classList.add('hidden');
+        }
+
+        function saveProfile() {
+            menteeData.name = document.getElementById('input-name').value.trim() || "김라온";
+            menteeData.school = document.getElementById('input-school').value.trim() || "서울중학교";
+            menteeData.grade = document.getElementById('input-grade').value.trim() || "2";
+            menteeData.classNum = document.getElementById('input-class').value.trim() || "3";
+
+            saveLocal();
+            renderHeader();
+            renderMentorReport();
+            closeProfileModal();
+        }
+    </script>
+</body>
+</html>
