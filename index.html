@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>김라온의 여름방학 RPG : 서울런 멘토링</title>
+    <title>김라온의 여름방학 RPG : 서울런 멘토링 퀘스트</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons -->
@@ -12,7 +12,6 @@
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
 
     <style>
-        /* Modern High-Contrast & Crisp Mobile Typography */
         * {
             word-break: keep-all;
             overflow-wrap: break-word;
@@ -33,21 +32,21 @@
         .game-card {
             background-color: #151d2a;
             border: 2px solid #3b82f6;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
             border-radius: 1rem;
         }
 
         .game-card-green {
-            background-color: #0d261e;
+            background-color: #062319;
             border: 2px solid #10b981;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
             border-radius: 1rem;
         }
 
         .game-card-gold {
             background-color: #241b0b;
             border: 2px solid #f59e0b;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
             border-radius: 1rem;
         }
 
@@ -156,14 +155,16 @@
                 </div>
             </div>
 
-            <!-- D-Day Banner -->
+            <!-- D-Day & Cloud Sync Status -->
             <div class="mt-3 pt-2 border-t border-slate-800/80 flex justify-between items-center text-xs font-bold text-slate-300">
                 <span class="truncate">🗓️ 방학: <strong class="text-cyan-300">7.22(수) ~ 8.17(월)</strong></span>
-                <span id="d-day-badge" class="shrink-0 bg-indigo-900/90 text-indigo-200 px-2 py-1 rounded-md border border-indigo-500/50">27일간의 대모험</span>
+                <span id="cloud-status" class="shrink-0 bg-emerald-950 text-emerald-300 px-2 py-0.5 rounded-md border border-emerald-500/50 flex items-center gap-1">
+                    <i class="fa-solid fa-cloud-arrow-up text-[10px]"></i> 클라우드 동기화중
+                </span>
             </div>
         </header>
 
-        <!-- Navigation Buttons (Fixed Word Break with flex & whitespace-nowrap) -->
+        <!-- Navigation Buttons -->
         <nav class="flex gap-1.5 w-full text-center">
             <button onclick="switchTab('daily')" id="tab-daily" class="flex-1 py-3 px-1.5 rounded-xl border-2 font-black text-xs sm:text-sm transition-all whitespace-nowrap bg-indigo-600 border-indigo-400 text-white shadow-md">
                 ⏰ 하루 일과
@@ -176,22 +177,29 @@
             </button>
         </nav>
 
-        <!-- TAB 1: DAILY ROUTINE (High Contrast & Sharp Typography) -->
+        <!-- TAB 1: DAILY ROUTINE -->
         <section id="sec-daily" class="flex flex-col gap-3">
             <div class="game-card-green p-4">
-                <!-- Title & Reset Button -->
-                <div class="flex justify-between items-center gap-2 mb-2 pb-2 border-b border-emerald-800/60">
+                <!-- Title & Preset/Reset Action Buttons -->
+                <div class="flex justify-between items-center gap-1.5 mb-2 pb-2 border-b border-emerald-800/60">
                     <h2 class="text-lg font-black text-emerald-300 flex items-center gap-1.5 shrink min-w-0">
                         <span class="shrink-0">⚡</span>
                         <span class="truncate">하루 일과 퀘스트</span>
                     </h2>
-                    <button onclick="resetDailyRoutine()" class="shrink-0 text-xs font-bold bg-emerald-950 hover:bg-emerald-900 text-emerald-200 border border-emerald-500 px-2.5 py-1 rounded-lg">
-                        초기화
-                    </button>
+                    
+                    <!-- Preset & Reset Buttons -->
+                    <div class="flex items-center gap-1 shrink-0">
+                        <button onclick="restoreMentorDefaultRoutines()" class="text-xs font-black bg-yellow-500 hover:bg-yellow-400 text-slate-950 border border-yellow-200 px-2 py-1 rounded-lg shadow" title="멘토 선생님이 정해준 기본 일정 불러오기">
+                            📋 기본 일정
+                        </button>
+                        <button onclick="resetDailyRoutine()" class="text-xs font-bold bg-emerald-950 hover:bg-emerald-900 text-emerald-200 border border-emerald-500 px-2 py-1 rounded-lg">
+                            초기화
+                        </button>
+                    </div>
                 </div>
                 
-                <p class="text-xs font-semibold text-emerald-100/90 mb-3 leading-relaxed">
-                    매일매일 실천할 골든 루틴을 체크해봐요! 완료시 경험치(EXP) 획득!
+                <p class="text-xs font-semibold text-emerald-100 mb-3 leading-relaxed">
+                    매일매일 실천할 골든 루틴입니다. 달력과 자동 연결되어 어디서 체크하든 반영돼요!
                 </p>
 
                 <!-- Routine List Container -->
@@ -218,7 +226,7 @@
                     </span>
                 </div>
                 <p class="text-xs font-semibold text-slate-300 mb-3 leading-relaxed">
-                    날짜를 클릭해 특별한 방학 퀘스트 목표를 설정하고 달성해보세요!
+                    날짜를 선택해 매일의 하루일과와 특별 방학 퀘스트를 체크하세요!
                 </p>
 
                 <!-- Mini Calendar Grid -->
@@ -251,7 +259,7 @@
 
                     <!-- Add task input -->
                     <div class="flex gap-2 mt-3">
-                        <input type="text" id="new-day-task-input" placeholder="새로운 퀘스트 입력 (예: 서울런 2강 듣기)" 
+                        <input type="text" id="new-day-task-input" placeholder="특별 퀘스트 추가 (예: 서울런 2강 복습)" 
                             class="flex-1 bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs sm:text-sm text-white focus:outline-none focus:border-indigo-400">
                         <button onclick="addDayTask()" class="shrink-0 bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold px-3 py-2 rounded-lg text-xs sm:text-sm shadow">
                             추가
@@ -267,13 +275,13 @@
                 <div class="flex justify-between items-center gap-2 mb-2 pb-2 border-b border-amber-800/80">
                     <h2 class="text-lg font-black text-yellow-300 flex items-center gap-1.5 shrink min-w-0">
                         <span class="shrink-0">📜</span>
-                        <span class="truncate">멘토 제출용 방학 일지</span>
+                        <span class="truncate">멘토 제출용 방학 보고서</span>
                     </h2>
                     <span class="shrink-0 text-xs bg-yellow-950 text-yellow-300 px-2 py-0.5 rounded border border-yellow-600 font-bold">
                         서울런 멘토링
                     </span>
                 </div>
-                <p class="text-xs font-semibold text-amber-100/90 mb-3 leading-relaxed">멘토 선생님께 나의 방학 계획과 현재 달성 상황을 공유해보세요!</p>
+                <p class="text-xs font-semibold text-amber-100/90 mb-3 leading-relaxed">멘토 선생님께 제출할 핵심 일정 5개 및 루틴 요약 보고서입니다.</p>
 
                 <!-- Report Card Summary -->
                 <div id="report-summary-card" class="bg-slate-950 border-2 border-yellow-500/70 p-4 rounded-xl text-slate-100 space-y-3">
@@ -295,16 +303,19 @@
                     </div>
 
                     <div>
-                        <h4 class="text-xs font-extrabold text-yellow-300 mb-1">⭐ 핵심 하루 일과 (루틴):</h4>
+                        <h4 class="text-xs font-extrabold text-yellow-300 mb-1">⭐ 하루 일과 루틴 (매일 실천):</h4>
                         <ul id="report-routine-summary" class="text-xs font-medium space-y-1 bg-slate-900 p-2.5 rounded-lg border border-slate-800 text-slate-200">
                             <!-- Summary dynamic -->
                         </ul>
                     </div>
 
                     <div>
-                        <h4 class="text-xs font-extrabold text-cyan-300 mb-1">📌 주요 일정 미리보기:</h4>
-                        <div id="report-upcoming-summary" class="text-xs font-medium bg-slate-900 p-2.5 rounded-lg border border-slate-800 text-slate-200 max-h-36 overflow-y-auto space-y-1">
-                            <!-- Dynamic preview -->
+                        <div class="flex justify-between items-center mb-1">
+                            <h4 class="text-xs font-extrabold text-cyan-300">📌 핵심 주요 일정 (최대 5개):</h4>
+                            <span class="text-[10px] text-slate-400">상위 5개 항목</span>
+                        </div>
+                        <div id="report-upcoming-summary" class="text-xs font-medium bg-slate-900 p-2.5 rounded-lg border border-slate-800 text-slate-200 space-y-1.5">
+                            <!-- Dynamic preview capped at 5 -->
                         </div>
                     </div>
 
@@ -316,10 +327,10 @@
                 <!-- Action Buttons -->
                 <div class="flex flex-col gap-2 mt-4">
                     <button onclick="copyMentorReport()" class="pixel-btn-gold py-3 px-4 rounded-xl font-black text-center text-sm sm:text-base flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-copy text-base"></i> 카카오톡/문자용 요약 텍스트 복사하기
+                        <i class="fa-solid fa-copy text-base"></i> 카카오톡/문자용 메시지 복사 (일정 5개 요약)
                     </button>
                     <p id="copy-toast" class="text-xs text-center text-emerald-400 font-extrabold hidden">
-                        ✨ 멘토 전혜현 선생님께 보낼 메시지가 복사되었습니다!
+                        ✨ 멘토 선생님께 보낼 메시지가 복사되었습니다! (일정 5개 요약 포함)
                     </p>
                 </div>
             </div>
@@ -376,7 +387,7 @@
         </div>
     </div>
 
-    <!-- Celebration / Level Up Popup Modal -->
+    <!-- Praise Modal -->
     <div id="modal-praise" class="fixed inset-0 bg-black/85 z-50 hidden flex items-center justify-center p-4">
         <div class="game-card-gold p-6 w-full max-w-sm text-center pop-in relative bg-slate-900 border-2 border-yellow-400">
             <div class="text-5xl mb-2">🎉🏆✨</div>
@@ -395,45 +406,189 @@
         </div>
     </div>
 
-    <script>
-        // Default Mentee State for Kim Ra-on
-        let menteeData = {
+    <!-- Firebase Cloud Storage Integration -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Global Firebase Configuration Setup
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'seoul-learn-mentoring-raon';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
+            apiKey: "demo-api-key",
+            authDomain: "demo.firebaseapp.com",
+            projectId: "demo-project",
+            storageBucket: "demo.appspot.com",
+            messagingSenderId: "123456789",
+            appId: "1:123456789:web:123456789"
+        };
+
+        let app, db, auth;
+        let currentUser = null;
+
+        // Mentor's Official Default Daily Routines Preset
+        const MENTOR_DEFAULT_ROUTINES = [
+            { id: 1, time: "08:00", task: "아침 기상 & 기지개 켜기 ☀️", done: false },
+            { id: 2, time: "10:00", task: "서울런 온라인 강의 1시간 수강 📚", done: false },
+            { id: 3, time: "14:00", task: "서울런 멘토링 참여 및 과제 점검 👨‍🏫", done: false },
+            { id: 4, time: "16:00", task: "여름방학 독서 30분 또는 운동 🏃‍♂️", done: false },
+            { id: 5, time: "22:00", task: "오늘 하루 방학 일기 & 퀘스트 정리 📝", done: false }
+        ];
+
+        // Core App Data Object
+        window.menteeData = {
             name: "김라온",
             school: "개웅중학교",
             grade: "1",
             classNum: "3",
             exp: 40,
             level: 1,
-            // Daily recurring routine tasks
-            routines: [
-                { id: 1, time: "08:00", task: "아침 기상 & 기지개 켜기 ☀️", done: true },
-                { id: 2, time: "10:00", task: "서울런 온라인 강의 2시간 수강 📚", done: true },
-                { id: 3, time: "14:00", task: "여름방학 독서 30분 또는 운동 🏃‍♂️", done: false },
-                { id: 4, time: "18:00", task: "서울런 멘토링 참여 및 과제 점검 👨‍🏫", done: false },
-                { id: 5, time: "22:00", task: "오늘 하루 방학 일기 & 퀘스트 정리 📝", done: false }
-            ],
-            // Specific Date Tasks (July 22 to August 17)
+            routines: JSON.parse(JSON.stringify(MENTOR_DEFAULT_ROUTINES)),
             dateTasks: {}
         };
 
-        // Date range configuration: 2026-07-22 to 2026-08-17
-        const startDate = new Date(2026, 6, 22); // Month 6 = July
-        const endDate = new Date(2026, 7, 17);   // Month 7 = August
+        const startDate = new Date(2026, 6, 22); // 2026-07-22
+        const endDate = new Date(2026, 7, 17);   // 2026-08-17
+        window.selectedDateStr = "2026-07-22";
 
-        let selectedDateStr = "2026-07-22";
-
-        // Mentor praise message pool
-        const mentorPraises = [
+        window.mentorPraises = [
             "🔥 대단해요 라온 학생! 오늘 퀘스트를 완벽하게 클리어했어요!",
             "⭐ 멘토 선생님도 깜짝 놀랄 집중력! 스스로 해내는 모습이 아름다워요.",
             "🏆 차곡차곡 쌓이는 공부 습관! 최고의 여름방학을 만들어가고 있네요.",
-            "🌱 성장의 경험치가 무럭무럭 쌓렸습니다! 매일 성장하는 라온이가 최고야!",
+            "🌱 성장의 경험치가 무럭무럭 쌓였습니다! 매일 성장하는 라온이가 최고요!",
             "👏 역시 약속을 잘 지키는 라온이! 오늘도 정말 고생 많았어요.",
             "💡 오늘 배운 서울런 내용도 차근차근 잘 복습해냈군요! 최고!",
             "🚀 한 발짝 더 목표에 가까워졌어요. 남은 방학도 함께 파이팅해요!"
         ];
 
-        // Web Audio API Sound Effects
+        async function initCloudPersistence() {
+            try {
+                app = initializeApp(firebaseConfig);
+                auth = getAuth(app);
+                db = getFirestore(app);
+
+                const token = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+                if (token) {
+                    await signInWithCustomToken(auth, token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        currentUser = user;
+                        setupFirestoreSync();
+                    }
+                });
+            } catch (err) {
+                console.warn("Cloud persistence setup using local fallback:", err);
+                document.getElementById('cloud-status').innerHTML = `<i class="fa-solid fa-hard-drive"></i> 로컬 저장 모드`;
+            }
+        }
+
+        function setupFirestoreSync() {
+            if (!currentUser) return;
+            // RULE 1 compliant Firestore path
+            const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'mentee_planners', 'kim_raon');
+            
+            onSnapshot(docRef, (docSnap) => {
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    if (data && data.menteeData) {
+                        window.menteeData = data.menteeData;
+                        renderAll();
+                        document.getElementById('cloud-status').innerHTML = `<i class="fa-solid fa-cloud-check text-emerald-400"></i> 클라우드 보존됨`;
+                    }
+                } else {
+                    saveToCloudAndLocal();
+                }
+            }, (error) => {
+                console.warn("Firestore snapshot error:", error);
+            });
+        }
+
+        window.saveToCloudAndLocal = async function() {
+            // Save to LocalStorage
+            try {
+                localStorage.setItem('seoul_learn_mentee_raon_v3', JSON.stringify(window.menteeData));
+            } catch (e) {}
+
+            // Save to Firebase Firestore if logged in
+            if (currentUser && db) {
+                try {
+                    const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'mentee_planners', 'kim_raon');
+                    await setDoc(docRef, {
+                        menteeData: window.menteeData,
+                        updatedAt: new Date().toISOString()
+                    }, { merge: true });
+                    document.getElementById('cloud-status').innerHTML = `<i class="fa-solid fa-cloud-check text-emerald-400"></i> 클라우드 보존됨`;
+                } catch (e) {
+                    console.warn("Cloud save error:", e);
+                }
+            }
+        };
+
+        // Load Initial Local Storage Cache
+        function loadLocalData() {
+            const saved = localStorage.getItem('seoul_learn_mentee_raon_v3') || localStorage.getItem('seoul_learn_mentee_raon_v2');
+            if (saved) {
+                try {
+                    window.menteeData = JSON.parse(saved);
+                } catch(e) {}
+            }
+        }
+
+        window.initDateTasksDefault = function() {
+            let cur = new Date(startDate);
+            while (cur <= endDate) {
+                const dStr = formatDateKey(cur);
+                if (!window.menteeData.dateTasks[dStr]) {
+                    const dayNum = cur.getDay();
+                    let tasks = [];
+
+                    if (dayNum === 3 || dayNum === 5) {
+                        tasks.push({ id: 'special_' + Date.now() + Math.random(), task: "👨‍🏫 서울런 1:1 멘토링 데이", done: false });
+                    }
+                    tasks.push({ id: 'special_' + Date.now() + Math.random(), task: "서울런 복습 및 질문거리 정리", done: false });
+
+                    window.menteeData.dateTasks[dStr] = tasks;
+                }
+                cur.setDate(cur.getDate() + 1);
+            }
+        };
+
+        function formatDateKey(dateObj) {
+            const y = dateObj.getFullYear();
+            const m = String(dateObj.getMonth() + 1).padStart(2, '0');
+            const d = String(dateObj.getDate()).padStart(2, '0');
+            return `${y}-${m}-${d}`;
+        }
+
+        window.formatDateKey = formatDateKey;
+        window.startDate = startDate;
+        window.endDate = endDate;
+        window.MENTOR_DEFAULT_ROUTINES = MENTOR_DEFAULT_ROUTINES;
+
+        window.onload = function() {
+            loadLocalData();
+            window.initDateTasksDefault();
+            initCloudPersistence();
+            renderAll();
+            getRandomPraise();
+        };
+
+        function renderAll() {
+            renderHeader();
+            renderRoutines();
+            renderCalendar();
+            renderSelectedDayTasks();
+            renderMentorReport();
+        }
+        window.renderAll = renderAll;
+    </script>
+
+    <script>
+        // Web Audio Effects
         function playSound(type) {
             try {
                 const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -462,64 +617,7 @@
                     osc.start();
                     osc.stop(now + 0.5);
                 }
-            } catch (e) {
-                // Audio Context silent fallback
-            }
-        }
-
-        window.onload = function() {
-            loadSavedData();
-            initDateTasksDefault();
-            renderHeader();
-            renderRoutines();
-            renderCalendar();
-            renderSelectedDayTasks();
-            renderMentorReport();
-            getRandomPraise();
-        };
-
-        function saveLocal() {
-            localStorage.setItem('seoul_learn_mentee_raon_v2', JSON.stringify(menteeData));
-        }
-
-        function loadSavedData() {
-            const saved = localStorage.getItem('seoul_learn_mentee_raon_v2') || localStorage.getItem('seoul_learn_mentee_raon');
-            if (saved) {
-                try {
-                    menteeData = JSON.parse(saved);
-                } catch(e) {}
-            }
-        }
-
-        function initDateTasksDefault() {
-            let cur = new Date(startDate);
-            while (cur <= endDate) {
-                const dStr = formatDateKey(cur);
-                if (!menteeData.dateTasks[dStr]) {
-                    const dayNum = cur.getDay();
-                    let tasks = [
-                        { id: Date.now() + Math.random(), task: "서울런 진도 체크 및 인강 수강", done: false },
-                        { id: Date.now() + Math.random(), task: "멘토링 질문거리 1개 작성하기", done: false }
-                    ];
-
-                    if (dayNum === 3 || dayNum === 5) {
-                        tasks.unshift({ id: Date.now() + Math.random(), task: "👨‍🏫 서울런 1:1 멘토링 데이", done: false });
-                    }
-                    if (dayNum === 6 || dayNum === 0) {
-                        tasks.push({ id: Date.now() + Math.random(), task: "🎨 주말 취미 활동 & 휴식 타임", done: false });
-                    }
-
-                    menteeData.dateTasks[dStr] = tasks;
-                }
-                cur.setDate(cur.getDate() + 1);
-            }
-        }
-
-        function formatDateKey(dateObj) {
-            const y = dateObj.getFullYear();
-            const m = String(dateObj.getMonth() + 1).padStart(2, '0');
-            const d = String(dateObj.getDate()).padStart(2, '0');
-            return `${y}-${m}-${d}`;
+            } catch (e) {}
         }
 
         function switchTab(tabName) {
@@ -567,7 +665,7 @@
             } else {
                 playSound('check');
             }
-            saveLocal();
+            window.saveToCloudAndLocal();
             renderHeader();
         }
 
@@ -604,10 +702,11 @@
                 if (item.done) {
                     addExp(15);
                     triggerRandomPraiseModal();
-                } else {
-                    saveLocal();
                 }
+                window.saveToCloudAndLocal();
                 renderRoutines();
+                renderCalendar();
+                renderSelectedDayTasks();
             }
         }
 
@@ -623,21 +722,39 @@
                 task: task,
                 done: false
             });
-            saveLocal();
+            window.saveToCloudAndLocal();
             renderRoutines();
+            renderCalendar();
+            renderSelectedDayTasks();
         }
 
         function deleteRoutine(id) {
             menteeData.routines = menteeData.routines.filter(r => r.id !== id);
-            saveLocal();
+            window.saveToCloudAndLocal();
             renderRoutines();
+            renderCalendar();
+            renderSelectedDayTasks();
+        }
+
+        // Restore Mentor Default Schedule
+        function restoreMentorDefaultRoutines() {
+            if (confirm("멘토 선생님이 정해준 [기본 하루 일정]으로 복원하시겠습니까?")) {
+                menteeData.routines = JSON.parse(JSON.stringify(window.MENTOR_DEFAULT_ROUTINES));
+                window.saveToCloudAndLocal();
+                renderRoutines();
+                renderCalendar();
+                renderSelectedDayTasks();
+                alert("✨ 멘토 선생님의 기본 하루 일정이 적용되었습니다!");
+            }
         }
 
         function resetDailyRoutine() {
             if (confirm("오늘의 하루 일과 체크를 모두 초기화할까요?")) {
                 menteeData.routines.forEach(r => r.done = false);
-                saveLocal();
+                window.saveToCloudAndLocal();
                 renderRoutines();
+                renderCalendar();
+                renderSelectedDayTasks();
             }
         }
 
@@ -657,8 +774,16 @@
             while (cur <= endDate) {
                 const dKey = formatDateKey(cur);
                 const dayNum = cur.getDate();
-                const tasks = menteeData.dateTasks[dKey] || [];
-                const allDone = tasks.length > 0 && tasks.every(t => t.done);
+                
+                // Unified total calculation (Daily Routines + Specific Date Tasks)
+                const routinesDoneCount = menteeData.routines.filter(r => r.done).length;
+                const dateTasks = menteeData.dateTasks[dKey] || [];
+                const dateDoneCount = dateTasks.filter(t => t.done).length;
+
+                const totalItems = menteeData.routines.length + dateTasks.length;
+                const totalDone = routinesDoneCount + dateDoneCount;
+                const allDone = totalItems > 0 && totalDone === totalItems;
+
                 const isSelected = dKey === selectedDateStr;
 
                 const cell = document.createElement('button');
@@ -674,7 +799,7 @@
                 cell.className = `p-2 rounded-xl flex flex-col items-center justify-center transition-all ${bgClass}`;
                 cell.innerHTML = `
                     <span class="text-xs font-black">${dayNum}</span>
-                    <span class="text-[10px] mt-0.5 font-bold">${allDone ? '✔' : tasks.length + '개'}</span>
+                    <span class="text-[10px] mt-0.5 font-bold">${allDone ? '✔' : totalDone + '/' + totalItems}</span>
                 `;
 
                 grid.appendChild(cell);
@@ -700,38 +825,59 @@
             const container = document.getElementById('day-task-list');
             container.innerHTML = '';
 
-            const tasks = menteeData.dateTasks[selectedDateStr] || [];
-
-            if (tasks.length === 0) {
-                container.innerHTML = `<p class="text-xs font-semibold text-slate-400 py-3 text-center">등록된 계획이 없습니다. 새로운 퀘스트를 추가해보세요!</p>`;
-            } else {
-                const allDone = tasks.every(t => t.done);
-                const tag = document.getElementById('day-completion-tag');
-                if (allDone) {
-                    tag.className = "shrink-0 text-xs bg-emerald-900 text-emerald-200 px-2 py-0.5 rounded font-extrabold border border-emerald-500";
-                    tag.innerText = "⭐ 클리어 완료!";
-                } else {
-                    tag.className = "shrink-0 text-xs bg-amber-900/90 text-amber-200 px-2 py-0.5 rounded font-extrabold border border-amber-600";
-                    tag.innerText = "진행중";
-                }
-
-                tasks.forEach(t => {
-                    const item = document.createElement('div');
-                    item.className = `flex items-center justify-between p-2.5 rounded-lg border gap-2 text-xs sm:text-sm font-extrabold ${
-                        t.done ? 'bg-emerald-950/60 border-emerald-500 text-emerald-200' : 'bg-slate-950 border-slate-700 text-white'
-                    }`;
-
-                    item.innerHTML = `
-                        <div class="flex items-center gap-2.5 min-w-0 flex-1">
-                            <input type="checkbox" class="quest-checkbox" ${t.done ? 'checked' : ''} onchange="toggleDayTask('${t.id}')">
-                            <span class="min-w-0 leading-snug ${t.done ? 'line-through text-emerald-300 opacity-80' : 'text-white'}">${t.task}</span>
+            const dateTasks = menteeData.dateTasks[selectedDateStr] || [];
+            
+            // Render Daily Routines within Calendar Card for Seamless Integration
+            let html = `<div class="mb-2 pb-2 border-b border-slate-800">
+                <span class="text-[11px] font-black text-emerald-400 block mb-1">⚡ 매일 골든 루틴:</span>`;
+            
+            menteeData.routines.forEach(r => {
+                html += `
+                    <div class="flex items-center justify-between p-2 my-1 rounded-lg bg-emerald-950/60 border border-emerald-800 text-xs font-bold">
+                        <div class="flex items-center gap-2">
+                            <input type="checkbox" class="quest-checkbox" ${r.done ? 'checked' : ''} onchange="toggleRoutine(${r.id})">
+                            <span class="${r.done ? 'line-through text-emerald-300 opacity-80' : 'text-emerald-100'}">${r.time} ${r.task}</span>
                         </div>
-                        <button onclick="deleteDayTask('${t.id}')" class="shrink-0 text-slate-400 hover:text-red-400 p-1">
-                            <i class="fa-solid fa-xmark text-sm"></i>
-                        </button>
+                    </div>
+                `;
+            });
+            html += `</div>`;
+
+            // Date specific tasks
+            html += `<div><span class="text-[11px] font-black text-indigo-300 block mb-1">📌 오늘 전용 특별 퀘스트:</span>`;
+
+            if (dateTasks.length === 0) {
+                html += `<p class="text-xs text-slate-400 py-1">특별 퀘스트가 없습니다. 아래에 추가해 보세요!</p>`;
+            } else {
+                dateTasks.forEach(t => {
+                    html += `
+                        <div class="flex items-center justify-between p-2 my-1 rounded-lg bg-slate-950 border border-slate-700 text-xs font-bold">
+                            <div class="flex items-center gap-2 min-w-0 flex-1">
+                                <input type="checkbox" class="quest-checkbox" ${t.done ? 'checked' : ''} onchange="toggleDayTask('${t.id}')">
+                                <span class="${t.done ? 'line-through text-slate-400' : 'text-white'} truncate">${t.task}</span>
+                            </div>
+                            <button onclick="deleteDayTask('${t.id}')" class="text-slate-400 hover:text-red-400 p-1">
+                                <i class="fa-solid fa-xmark"></i>
+                            </button>
+                        </div>
                     `;
-                    container.appendChild(item);
                 });
+            }
+            html += `</div>`;
+
+            container.innerHTML = html;
+
+            // Overall completion status tag
+            const routinesDone = menteeData.routines.every(r => r.done);
+            const dateDone = dateTasks.length === 0 || dateTasks.every(t => t.done);
+            const tag = document.getElementById('day-completion-tag');
+
+            if (routinesDone && dateDone) {
+                tag.className = "shrink-0 text-xs bg-emerald-900 text-emerald-200 px-2 py-0.5 rounded font-extrabold border border-emerald-500";
+                tag.innerText = "⭐ 오늘 완수!";
+            } else {
+                tag.className = "shrink-0 text-xs bg-amber-900/90 text-amber-200 px-2 py-0.5 rounded font-extrabold border border-amber-600";
+                tag.innerText = "진행중";
             }
         }
 
@@ -743,9 +889,8 @@
                 if (t.done) {
                     addExp(20);
                     triggerRandomPraiseModal();
-                } else {
-                    saveLocal();
                 }
+                window.saveToCloudAndLocal();
                 renderCalendar();
                 renderSelectedDayTasks();
             }
@@ -761,13 +906,13 @@
             }
 
             menteeData.dateTasks[selectedDateStr].push({
-                id: Date.now(),
+                id: 'special_' + Date.now(),
                 task: val,
                 done: false
             });
 
             input.value = '';
-            saveLocal();
+            window.saveToCloudAndLocal();
             renderCalendar();
             renderSelectedDayTasks();
         }
@@ -775,7 +920,7 @@
         function deleteDayTask(taskId) {
             if (!menteeData.dateTasks[selectedDateStr]) return;
             menteeData.dateTasks[selectedDateStr] = menteeData.dateTasks[selectedDateStr].filter(x => String(x.id) !== String(taskId));
-            saveLocal();
+            window.saveToCloudAndLocal();
             renderCalendar();
             renderSelectedDayTasks();
         }
@@ -799,6 +944,7 @@
                 </li>
             `).join('');
 
+            // Strictly Capped at 5 key schedule items
             const upcomingSum = document.getElementById('report-upcoming-summary');
             let upcomingHTML = '';
             
@@ -809,9 +955,9 @@
                 const tasks = menteeData.dateTasks[dKey] || [];
                 if (tasks.length > 0) {
                     const [, m, d] = dKey.split('-');
-                    upcomingHTML += `<div class="mb-1.5"><strong class="text-yellow-300 font-extrabold">${parseInt(m)}월 ${parseInt(d)}일:</strong>`;
+                    upcomingHTML += `<div class="p-1.5 bg-slate-950 rounded border border-slate-800"><strong class="text-yellow-300 font-extrabold">${parseInt(m)}월 ${parseInt(d)}일:</strong>`;
                     tasks.forEach(t => {
-                        upcomingHTML += `<div class="pl-2 flex justify-between gap-2 text-[11px] font-semibold">
+                        upcomingHTML += `<div class="pl-2 flex justify-between gap-2 text-[11px] font-semibold mt-0.5">
                             <span class="truncate">- ${t.task}</span>
                             <span class="${t.done ? 'text-emerald-400' : 'text-amber-300'} shrink-0 font-bold">${t.done ? '완료' : '진행중'}</span>
                         </div>`;
@@ -821,7 +967,7 @@
                 }
                 cur.setDate(cur.getDate() + 1);
             }
-            upcomingSum.innerHTML = upcomingHTML || '<p class="text-slate-400">일정이 없습니다.</p>';
+            upcomingSum.innerHTML = upcomingHTML || '<p class="text-slate-400">등록된 주요 일정이 없습니다.</p>';
         }
 
         function copyMentorReport() {
@@ -838,7 +984,7 @@
                 text += `${r.done ? '✅' : '⬜'} [${r.time}] ${r.task}\n`;
             });
 
-            text += `\n📅 [주요 일정 및 멘토링 목표]\n`;
+            text += `\n📅 [핵심 방학 일정 (상위 5개 요약)]\n`;
             let cur = new Date(startDate);
             let addedCount = 0;
             while (cur <= endDate && addedCount < 5) {
@@ -863,7 +1009,7 @@
 
             const toast = document.getElementById('copy-toast');
             toast.classList.remove('hidden');
-            setTimeout(() => toast.classList.add('hidden'), 3000);
+            setTimeout(() => toast.classList.add('hidden'), 3500);
         }
 
         function getRandomPraise() {
@@ -904,7 +1050,7 @@
             menteeData.grade = document.getElementById('input-grade').value.trim() || "1";
             menteeData.classNum = document.getElementById('input-class').value.trim() || "3";
 
-            saveLocal();
+            window.saveToCloudAndLocal();
             renderHeader();
             renderMentorReport();
             closeProfileModal();
